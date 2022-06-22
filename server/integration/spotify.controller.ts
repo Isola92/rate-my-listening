@@ -1,7 +1,6 @@
 import { Controller, Get, Param, Post, Query, Req } from "@nestjs/common";
-import { ScrapeService } from "web-server/scraping/scrape.service";
 import { getRedirectUrl, getSpotifyAuthToken } from "./spotify";
-import { Request, response } from "express";
+import { Request } from "express";
 import * as querystring from "querystring";
 
 /**

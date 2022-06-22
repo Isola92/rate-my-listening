@@ -8,7 +8,7 @@ export const getRymAlbumPath = (album, artist) => {
 import * as path from "path";
 
 export const getRymAlbumBrowserFunctionPath = () =>
-  `${path.resolve(__dirname)}../../../browser-functions/album-page.js`;
+  `${path.resolve(__dirname)}../../../../browser-functions/album-page.js`;
 
 const urlifyName = (name: string) => {
   return name.replaceAll(" ", "-").toLowerCase();

@@ -1,0 +1,10 @@
+{
+  "name": "rate-my-listening-frontend",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/spotify-api": "^0.0.16"
+  },
+  "scripts": {
+    "serve-frontend": "ws --spa ./index.html"
+  }
+}
