@@ -1,8 +1,12 @@
 import * as querystring from "querystring";
-const clientId = ""
-const clientSecret = "";
+//import * as process from "process";
 
 export const getSpotifyAuthToken = async (code, state) => {
+  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+
+  console.info("client id", clientId);
+  console.info("client secret", clientSecret);
   // Buffer.from(str, 'base64') andbuf.toString('base64')
   const authBuffer = Buffer.from(`${clientId}:${clientSecret}`).toString(
     "base64"
@@ -40,6 +44,9 @@ const redirect_uri = "http://localhost:8000/spotify-redirect";
 export const getRedirectUrl = (
   state = Math.floor(Math.random() * 16).toString()
 ) => {
+  const clientId = process.env.SPOTIFY_CLIENT_ID;
+  console.info("client id", clientId);
+
   return (
     "https://accounts.spotify.com/authorize?" +
     querystring.stringify({

@@ -9,7 +9,7 @@ export interface ScrapeQueryOptions {
 }
 
 export class ScrapeService {
-  async getRecentData(options: ScrapeQueryOptions): Promise<RymAlbumData[]> {
+  async getRecentData(options: ScrapeQueryOptions): Promise<RymAlbumData> {
     try {
       const browser = await puppeteer.launch({ headless: false });
       const page = await browser.newPage();
@@ -21,7 +21,8 @@ export class ScrapeService {
 
       const json = JSON.stringify(result);
       await fs.writeFile(`albums-${uuid.v4()}.json`, json, "utf8");
-      return result as RymAlbumData[];
+      browser.close();
+      return result as RymAlbumData;
     } catch (e) {
       console.warn("Error during scraping", e);
     }
@@ -33,5 +34,20 @@ export class ScrapeService {
       const func = new Function(`return ${funcString}.apply(null, arguments)`);
       return func();
     }, queryFunction);
+  }
+
+  async getRatings(options: ScrapeQueryOptions[]) {
+    const ratings = [];
+    for (const option of options) {
+      const data = await this.getRecentData(option);
+
+      if (!data) {
+        console.info("Failed to fetch data for url", option.url);
+        continue;
+      }
+      ratings.push(data);
+    }
+
+    return ratings;
   }
 }

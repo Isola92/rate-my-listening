@@ -1,4 +1,4 @@
-import { Controller, Get } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, Post, Req } from "@nestjs/common";
 import { getRymAlbumBrowserFunctionPath, getRymAlbumPath } from "./paths";
 import { ScrapeQueryOptions, ScrapeService } from "./scrape.service";
 import * as fs from "fs/promises";
@@ -7,16 +7,32 @@ import * as fs from "fs/promises";
 export class ScrapeController {
   constructor(private readonly scrapeService: ScrapeService) {}
 
-  @Get("/rating")
-  async getHello(): Promise<RymAlbumData[]> {
-    const queryOptions: ScrapeQueryOptions = {
-      url: getRymAlbumPath("The Tired Sounds Of", "Stars Of The Lid"),
-      queryFunction: await fs.readFile(getRymAlbumBrowserFunctionPath(), {
+  @Post("/rating")
+  async ratings(@Body() ratingRequest: RatingRequest): Promise<RymAlbumData[]> {
+    const queryFunction = await await fs.readFile(
+      getRymAlbumBrowserFunctionPath(),
+      {
         encoding: "utf8",
-      }),
-    };
-    return this.scrapeService.getRecentData(queryOptions);
+      }
+    );
+
+    const queryOptions: ScrapeQueryOptions[] = ratingRequest.items
+      .slice(0, 2)
+      .map((request) => {
+        return {
+          url: getRymAlbumPath(request.album, request.artist),
+          queryFunction,
+        };
+      });
+
+    const res = await this.scrapeService.getRatings(queryOptions);
+    console.info("Scraped info for albums", res);
+    return res;
   }
+}
+
+interface RatingRequest {
+  items: Omit<RymAlbumData, "rating">[];
 }
 
 export interface RymAlbumData {
