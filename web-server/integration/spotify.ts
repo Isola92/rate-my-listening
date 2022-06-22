@@ -1,6 +1,6 @@
 import * as querystring from "querystring";
-const clientId = "622d99423897442c8e28951e88932df1";
-const clientSecret = "8266235a015c4b5ba7db05814fcb3d37";
+const clientId = ""
+const clientSecret = "";
 
 export const getSpotifyAuthToken = async (code, state) => {
   // Buffer.from(str, 'base64') andbuf.toString('base64')
