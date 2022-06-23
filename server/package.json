@@ -1,5 +1,5 @@
 {
-  "name": "rym-get-unrated",
+  "name": "rate-my-listening-server",
   "version": "1.0.0",
   "description": "Fetch albums from Spotify and combine it with ratings from rateyourmusic.",
   "dependencies": {
