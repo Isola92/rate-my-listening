@@ -4,7 +4,7 @@ export const Start = () => {
   useEffect(() => {
     initiateAuth();
   }, []);
-  return <h1>Hello Start!</h1>;
+  return <h1>Initiating Spotify authentication</h1>;
 };
 
 const initiateAuth = async () => {

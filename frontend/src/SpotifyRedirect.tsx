@@ -1,14 +1,29 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { AlbumData } from "./model/AlbumData";
+import topItemsAtom from "./atom/topItems";
+import { TopItemResponse } from "./model/TopItemResponse";
 
 export const SpotifyRedirect = () => {
-  const [averageRating, setAverageRating] = useState(0);
+  const [topItems, setTopItems] = useRecoilState(topItemsAtom);
+
+  const navigate = useNavigate();
   useEffect(() => {
     exchangeToken()
       .then(fetchTopItems)
       .then(fetchScrapedRating)
-      .then(setAverageRating);
+      .then(setTopItems);
   }, []);
-  return <h1>Hello Redirect. Rating: {averageRating}</h1>;
+
+  useEffect(() => {
+    if (topItems.length > 0) navigate("/result");
+  }, [topItems]);
+  return (
+    <>
+      <h1>Processing your listening data..</h1>;
+    </>
+  );
 };
 
 const exchangeToken = async (): Promise<string> => {
@@ -31,11 +46,11 @@ const fetchTopItems = async (token: string) => {
   ).then((response) => response.json());
 
   console.info("Identified topItems", topItems);
-  return topItems;
+  return processSpotifyAlbumData(topItems);
 };
 
-const fetchScrapedRating = async (topItems: TopItemResponse) => {
-  const spotifyAlbumData = processSpotifyAlbumData(topItems);
+const fetchScrapedRating = async (spotifyAlbumData: AlbumData[]) => {
+  //const spotifyAlbumData = processSpotifyAlbumData(topItems);
   console.info(spotifyAlbumData);
   const albumWithRatings = await fetch("http://localhost:3000/scrape/rating", {
     headers: {
@@ -46,15 +61,10 @@ const fetchScrapedRating = async (topItems: TopItemResponse) => {
   }).then((x) => x.json());
 
   console.info("Fetched album with ratings", albumWithRatings);
-
-  const sum = (albumWithRatings as any[])
-    .map((x) => Number(x.rating.trim()))
-    .reduce((acc, current) => (acc += current));
-
-  return sum / albumWithRatings.length;
+  return albumWithRatings;
 };
 
-const processSpotifyAlbumData = (response: TopItemResponse) => {
+const processSpotifyAlbumData = (response: TopItemResponse): AlbumData[] => {
   return response.items.map((x) => {
     return {
       artist: x.album.artists[0].name,
@@ -62,11 +72,3 @@ const processSpotifyAlbumData = (response: TopItemResponse) => {
     };
   });
 };
-
-interface TopItemResponse {
-  items: TopItemEntity[];
-}
-
-interface TopItemEntity {
-  album: SpotifyApi.AlbumObjectSimplified;
-}

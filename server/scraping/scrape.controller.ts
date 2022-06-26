@@ -17,7 +17,7 @@ export class ScrapeController {
     );
 
     const queryOptions: ScrapeQueryOptions[] = ratingRequest.items
-      .slice(0, 2)
+      .slice(2, 5)
       .map((request) => {
         return {
           url: getRymAlbumPath(request.album, request.artist),

@@ -4,6 +4,5 @@
     "module": "commonjs",
     "target": "ES2022",
     "esModuleInterop": true
-  },
-  "exclude": ["node_modules"]
+  }
 }

@@ -6,8 +6,8 @@ function crawl() {
   const rating = ".avg_rating";
 
   return {
-    artist: document.querySelector(artist).innerText,
-    album: document.querySelector(album).innerText,
-    rating: document.querySelector(rating).innerText,
+    artist: document.querySelector(artist)?.innerText,
+    album: document.querySelector(album)?.innerText,
+    rating: document.querySelector(rating)?.innerText,
   };
 }
