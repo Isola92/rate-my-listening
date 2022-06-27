@@ -29239,10 +29239,12 @@ This is currently a DEV-only warning but will become a thrown exception in the n
   // src/Start.tsx
   var import_react5 = __toESM(require_react());
   var Start = () => {
-    (0, import_react5.useEffect)(() => {
-      initiateAuth();
-    }, []);
-    return /* @__PURE__ */ import_react5.default.createElement("h1", null, "Initiating Spotify authentication");
+    return /* @__PURE__ */ import_react5.default.createElement(import_react5.default.Fragment, null, /* @__PURE__ */ import_react5.default.createElement("h1", {
+      id: "start"
+    }, "Initiate Spotify authentication!"), /* @__PURE__ */ import_react5.default.createElement("button", {
+      id: "auth-button",
+      onClick: () => initiateAuth()
+    }, "OK"));
   };
   var initiateAuth = async () => {
     const spotifyAuthUrl = await fetch("http://localhost:3000/spotify/auth").then((response) => response.json());

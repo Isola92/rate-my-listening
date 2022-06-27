@@ -1,10 +1,14 @@
 import React, { useEffect } from "react";
 
 export const Start = () => {
-  useEffect(() => {
-    initiateAuth();
-  }, []);
-  return <h1>Initiating Spotify authentication</h1>;
+  return (
+    <>
+      <h1 id="start">Initiate Spotify authentication!</h1>
+      <button id="auth-button" onClick={() => initiateAuth()}>
+        OK
+      </button>
+    </>
+  );
 };
 
 const initiateAuth = async () => {

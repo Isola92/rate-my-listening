@@ -42,7 +42,7 @@ export class ScrapeService {
     const ratings = [];
     for (const option of options) {
       const data = await this.getRecentData(option);
-      if (!data) {
+      if (!data || Object.keys(data).length === 0) {
         console.info("Failed to fetch data for url", option.url);
         continue;
       }

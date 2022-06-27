@@ -1,4 +1,7 @@
 node_modules
 dist
 albums*
-frontend/*.js
+/test-results/
+frontend/playwright-report/
+frontend/playwright/.cache/
+
