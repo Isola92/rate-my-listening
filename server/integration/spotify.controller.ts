@@ -1,5 +1,14 @@
-import { Controller, Get, Param, Post, Query, Req } from "@nestjs/common";
-import { getRedirectUrl, getSpotifyAuthToken } from "./spotify";
+import {
+  Controller,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+  Req,
+} from "@nestjs/common";
+import { SpotifyService } from "./spotify.service.ts";
 import { Request } from "express";
 import * as querystring from "querystring";
 
@@ -8,40 +17,53 @@ import * as querystring from "querystring";
  */
 @Controller("spotify")
 export class SpotifyController {
-  constructor() {}
+  constructor(private readonly spotifyService: SpotifyService) {}
 
   @Get("/auth")
   async auth(): Promise<any> {
-    return { url: getRedirectUrl() };
+    return { url: this.spotifyService.getRedirectUrl() };
   }
 
   @Get("/token-exchange")
-  async tokenExchange(@Req() request: Request) {
-    const { code, state } = querystring.parse(request.url.split("?")[1]);
+  async tokenExchange(
+    @Query("code") code: string,
+    @Query("state") state: string
+  ) {
     console.info("Received request for token with code", code);
-    return getSpotifyAuthToken(code, state);
+
+    try {
+      return await this.spotifyService.getSpotifyAuthToken(code, state);
+    } catch (e) {
+      console.info("Failed to fetch spotify auth token for code", code, e);
+      throw new HttpException("Forbidden", HttpStatus.BAD_REQUEST);
+    }
   }
 
-  @Get("/top-items/")
+  @Get("/top-items")
   async getTopItems(
     @Query("type") type: string,
     @Query("token") token: string
   ) {
     console.info("Received top item request from client with token", token);
-    const res = await fetch(
-      `https://api.spotify.com/v1/me/top/${type}?limit=50`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
 
-    const topItems = await res.text();
+    try {
+      const res = await fetch(
+        `https://api.spotify.com/v1/me/top/${type}?limit=50`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-    console.info("Fetched top items", topItems);
-    return topItems;
+      const topItems = await res.text();
+      console.info("Fetched top items", topItems);
+      return topItems;
+    } catch (e) {
+      console.info("Failed to fetch top items", e);
+      throw new HttpException("Forbidden", HttpStatus.BAD_REQUEST);
+    }
   }
 }

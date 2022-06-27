@@ -46,7 +46,7 @@ const fetchTopItems = async (token: string) => {
   ).then((response) => response.json());
 
   console.info("Identified topItems", topItems);
-  return processSpotifyAlbumData(topItems);
+  return processSpotifyAlbumData(topItems).slice(15, 16);
 };
 
 const fetchScrapedRating = async (spotifyAlbumData: AlbumData[]) => {

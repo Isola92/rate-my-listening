@@ -7,7 +7,7 @@ test.describe("Average rating", () => {
       "Initiate Spotify authentication!"
     );
 
-    await page.click("#auth-button";
+    await page.click("#auth-button");
 
     const testUser = process.env.SPOTIFY_TEST_USER;
     const testPw = process.env.SPOTIFY_TEST_PW;

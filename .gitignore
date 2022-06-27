@@ -4,4 +4,4 @@ albums*
 /test-results/
 frontend/playwright-report/
 frontend/playwright/.cache/
-
+frontend/bin

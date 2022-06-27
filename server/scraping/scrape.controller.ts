@@ -16,14 +16,14 @@ export class ScrapeController {
       }
     );
 
-    const queryOptions: ScrapeQueryOptions[] = ratingRequest.items
-      .slice(2, 5)
-      .map((request) => {
+    const queryOptions: ScrapeQueryOptions[] = ratingRequest.items.map(
+      (request) => {
         return {
           url: getRymAlbumPath(request.album, request.artist),
           queryFunction,
         };
-      });
+      }
+    );
 
     const res = await this.scrapeService.getRatings(queryOptions);
     console.info("Scraped info for albums", res);
